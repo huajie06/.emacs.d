@@ -33,3 +33,9 @@ emacs setup
 (global-set-key (kbd "M-=") 'align-equals)
 
 ```
+
+
+## TODO
+- the enviroment variable `$PATH` is not read succesfully
+- ibuffer groups display even the groups has 0 member
+- 

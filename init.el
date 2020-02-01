@@ -9,11 +9,15 @@
 (add-to-list 'package-archives
 	'("melpa" . "http://melpa.org/packages/"))
 
+(setq exec-path (append '("/usr/local/bin"
+			  "/usr/bin"
+			  "/usr/local/go/bin"
+			  "/Users/huajiezhang/go/bin") exec-path))
 
-(setenv "PATH" (concat "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:" (getenv "PATH")))
-(setq exec-path (append '("/usr/local/bin" "/usr/bin" "/usr/local/go/bin" "/Users/huajiezhang/go/bin") exec-path))
+(setenv "PATH" (concat "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Users/huajiezhang/go/bin:"
+		       (getenv "PATH")))
 
-
+;; (add-to-list 'load-path (concat (getenv "GOPATH")  "/src/golang.org/x/lint/misc/emacs/"))
 
 (defun my-go-mode-hook ()
     ;; prefer goimports, if present
@@ -271,7 +275,7 @@
  '(org-agenda-files (quote ("/Users/huajiezhang/test/notes/org_mode.org")))
  '(package-selected-packages
    (quote
-    (go-eldoc company-anaconda anaconda-mode web-mode company-go go-mode magit ox-pandoc js2-mode markdown-mode telephone-line sr-speedbar spacemacs-theme rainbow-delimiters projectile powerline ido-vertical-mode htmlize evil diminish counsel company auto-complete ace-jump-mode))))
+    (golint go-eldoc company-anaconda anaconda-mode web-mode company-go go-mode magit ox-pandoc js2-mode markdown-mode telephone-line sr-speedbar spacemacs-theme rainbow-delimiters projectile powerline ido-vertical-mode htmlize evil diminish counsel company auto-complete ace-jump-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
