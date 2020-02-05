@@ -17,22 +17,24 @@
 (setenv "PATH" (concat "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Users/huajiezhang/go/bin:"
 		       (getenv "PATH")))
 
-;; (add-to-list 'load-path (concat (getenv "GOPATH")  "/src/golang.org/x/lint/misc/emacs/"))
 
 (defun my-go-mode-hook ()
     ;; prefer goimports, if present
     (if (executable-find "goimports")
     (setq gofmt-command "goimports"))
-
-    ;; Format code when we save
     (add-hook 'before-save-hook 'gofmt-before-save)
 
     ;; esc-space to jump to definition
     (local-set-key (kbd "M-SPC") 'godef-jump)
+    (local-set-key (kbd "C-c C-g") 'golint)
     ;; escp-b to jump (b)ack
     (local-set-key (kbd "M-b") 'pop-tag-mark))
 
+
 (add-hook 'go-mode-hook 'my-go-mode-hook 'go-eldoc-setup)
+
+
+
 
 (defun align-equals (begin end)
     (interactive "r")
@@ -78,7 +80,9 @@
  'org-babel-load-languages
  '((go . t)))
 
-(setq show-paren-mode t)
+(show-paren-mode 1)
+
+
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
@@ -107,6 +111,7 @@
 	 ("Help" (or (name . "\*Help\*")
 		     (name . "\*Apropos\*")
 		     (name . "\*info\*"))))))
+(setq ibuffer-show-empty-filter-groups nil)
 (add-hook 'ibuffer-mode-hook
 	  '(lambda ()
 	     (ibuffer-switch-to-saved-filter-groups "home")))
@@ -126,7 +131,7 @@
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
 
-(setq default-frame-alist '((font . "Menlo-26")))
+(setq default-frame-alist '((font . "Menlo-24")))
 
 ;; need to make a directory first
 (setq backup-directory-alist `(("." . "~/.saves")))
@@ -149,9 +154,15 @@
 ;; don't show tool bar
 (tool-bar-mode -1)
 
+;; (with-eval-after-load 'ilist (evil-collection-imenu-list-setup))
+
+;; (setq evil-want-keybinding nil)
+;; (evil-collection-init)
+
+(evil-mode 1)
+
 ;; display line numbers
 (global-linum-mode t)
-(evil-mode 1)
 
 (ivy-mode 1)
 (setq ivy-height 15)
@@ -220,7 +231,7 @@
 (require 'recentf)
 (recentf-mode 1)
 ;; (global-set-key "\C-x\ \C-r" 'recentf-open-files)
-(setq recentf-max-saved-items 50)
+(setq recentf-max-saved-items 100)
 (defun ido-recentf-open ()
   "Use `ido-completing-read' to \\[find-file]] a recent file"
   (interactive)
@@ -266,6 +277,9 @@
 
 (setq org-agenda-files (list "/Users/huajiezhang/test/notes/org_mode.org"))
 
+(setq imenu-list-position 'left)
+(global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
+
 (load-theme 'wombat)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -275,7 +289,7 @@
  '(org-agenda-files (quote ("/Users/huajiezhang/test/notes/org_mode.org")))
  '(package-selected-packages
    (quote
-    (golint go-eldoc company-anaconda anaconda-mode web-mode company-go go-mode magit ox-pandoc js2-mode markdown-mode telephone-line sr-speedbar spacemacs-theme rainbow-delimiters projectile powerline ido-vertical-mode htmlize evil diminish counsel company auto-complete ace-jump-mode))))
+    (evil-collection imenu-list cider golint go-eldoc company-anaconda anaconda-mode web-mode company-go go-mode magit ox-pandoc js2-mode markdown-mode telephone-line sr-speedbar spacemacs-theme rainbow-delimiters projectile powerline ido-vertical-mode htmlize evil diminish counsel company auto-complete ace-jump-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
