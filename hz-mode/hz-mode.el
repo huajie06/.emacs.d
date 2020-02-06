@@ -50,7 +50,8 @@
 	 ;; (extension . shell program name)
 	 `(
 	   ;; ("php" . "php")
-	   ;; ("pl" . "perl")
+	   ("lisp" . "sbcl --script")
+	   ("clj" . "clj")
 	   ("py" . "python3")
 	   ("lua" . "lua")
 	   ("sh" . "bash")
