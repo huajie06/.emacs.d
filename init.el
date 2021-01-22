@@ -1,8 +1,7 @@
 ;; add melpa
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
+;; just comment it out by adding a semicolon to the start of the line. ;; You may delete these explanatory comments.
 (package-initialize)
 
 (require 'package)
@@ -14,7 +13,7 @@
 			  "/usr/local/go/bin"
 			  "/Users/huajiezhang/go/bin") exec-path))
 
-(setenv "PATH" (concat "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Users/huajiezhang/go/bin:"
+(setenv "PATH" (concat "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Users/huajiezhang/go/bin:/Library/TeX/texbin:"
 		       (getenv "PATH")))
 
 
@@ -34,7 +33,18 @@
 (add-hook 'go-mode-hook 'my-go-mode-hook 'go-eldoc-setup)
 
 
+;; lisp
+(slime-setup '(slime-fancy slime-company))
 
+;; (setq slime-lisp-implementations
+;;       '((sbcl ("sbcl" "--core" "sbcl.core-for-slime"))))
+
+(setq inferior-lisp-program "/usr/local/bin/sbcl")
+(setq slime-contribs '(slime-fancy))
+(require 'eval-in-repl-slime)
+(add-hook 'lisp-mode-hook
+      '(lambda ()
+         (local-set-key (kbd "<C-return>") 'eir-eval-in-slime)))
 
 (defun align-equals (begin end)
     (interactive "r")
@@ -81,7 +91,7 @@
  '((go . t)))
 
 (show-paren-mode 1)
-
+(electric-pair-mode 1)
 
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
@@ -99,6 +109,7 @@
 	 ("py" (mode . python-mode))
 	 ("go" (mode . go-mode))
 	 ("md" (mode . markdown-mode))
+	 ("lisp" (mode . lisp-mode))
 	 ("web" (or (mode . html-mode)
 		    (mode . mhtml-mode)
 		    (mode . css-mode)))
@@ -125,13 +136,8 @@
     (R . t)
     (python . t)
     (shell . t)
+    (lisp . t)
     ))
-
-(setq blink-cursor-mode nil)
-(setq visible-bell nil)
-(setq ring-bell-function 'ignore)
-
-(setq default-frame-alist '((font . "Menlo-24")))
 
 ;; need to make a directory first
 (setq backup-directory-alist `(("." . "~/.saves")))
@@ -263,6 +269,8 @@
 
 (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
 
+(global-anzu-mode +1)
+
 (require 'diminish)
 (diminish 'company-mode)
 (diminish 'hz-mode)
@@ -270,29 +278,21 @@
 (diminish 'eldoc-mode)
 (diminish 'ivy-mode)
 (diminish 'projectile-mode)
+(diminish 'anzu-mode)
 
 (add-hook 'org-mode-hook '(lambda () (setq fill-column 80)))
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
-
 
 (setq org-agenda-files (list "/Users/huajiezhang/test/notes/org_mode.org"))
 
 (setq imenu-list-position 'left)
 (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
 
+(setq visible-bell nil)
+(setq ring-bell-function 'ignore)
+
+(setq default-frame-alist '((font . "Menlo-18")))
+
 (load-theme 'wombat)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-agenda-files (quote ("/Users/huajiezhang/test/notes/org_mode.org")))
- '(package-selected-packages
-   (quote
-    (evil-collection imenu-list cider golint go-eldoc company-anaconda anaconda-mode web-mode company-go go-mode magit ox-pandoc js2-mode markdown-mode telephone-line sr-speedbar spacemacs-theme rainbow-delimiters projectile powerline ido-vertical-mode htmlize evil diminish counsel company auto-complete ace-jump-mode))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
+(blink-cursor-mode -1)
