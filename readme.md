@@ -38,4 +38,4 @@ emacs setup
 ## TODO
 - the enviroment variable `$PATH` is not read succesfully
 - ibuffer groups display even the groups has 0 member
-- 
+- run-output buffer doesn't have line number
