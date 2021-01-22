@@ -52,7 +52,7 @@
 	   ;; ("php" . "php")
 	   ("lisp" . "sbcl --script")
 	   ("clj" . "clj")
-	   ("py" . "python3")
+	   ("py" . "/Library/Frameworks/Python.framework/Versions/3.8/bin/python3")
 	   ("lua" . "lua")
 	   ("sh" . "bash")
 	   ("go" . "go run")
