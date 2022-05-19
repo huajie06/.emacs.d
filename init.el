@@ -8,14 +8,24 @@
 (add-to-list 'package-archives
 	'("melpa" . "http://melpa.org/packages/"))
 
-(setq exec-path (append '("/usr/local/bin"
-			  "/usr/bin"
-			  "/usr/local/go/bin"
-			  "/Users/huajiezhang/go/bin") exec-path))
+;; (setq exec-path (append '("/usr/local/bin"
+;; 			  "/usr/bin"
+;; 			  "/usr/local/go/bin"
+;; 			  "/Users/huajiezhang/go/bin") exec-path))
 
-(setenv "PATH" (concat "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Users/huajiezhang/go/bin:/Library/TeX/texbin:"
-		       (getenv "PATH")))
+;; (setenv "PATH" (concat "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Users/huajiezhang/go/bin:/Library/TeX/texbin:"
+;; 		       (getenv "PATH")))
 
+;;(setq tramp-remote-path (append '("/usr/local/go/bin"
+;;				  "/usr/local/bin/") tramp-remote-path))
+
+
+
+;; (when (memq window-system '(mac ns x))
+;;   (exec-path-from-shell-initialize))
+
+(require 'tramp)
+(add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
 (defun my-go-mode-hook ()
     ;; prefer goimports, if present
@@ -28,7 +38,6 @@
     (local-set-key (kbd "C-c C-g") 'golint)
     ;; escp-b to jump (b)ack
     (local-set-key (kbd "M-b") 'pop-tag-mark))
-
 
 (add-hook 'go-mode-hook 'my-go-mode-hook 'go-eldoc-setup)
 
@@ -68,14 +77,11 @@
 (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
 
 (require 'rx)
-
 ;; (eval-after-load "company"
 ;;  '(add-to-list 'company-backends 'company-anaconda))
 
 (eval-after-load "company"
  '(add-to-list 'company-backends '(company-anaconda :with company-capf)))
-
-;; (setq-default tab-width 4)
 
 (add-hook 'python-mode-hook
       (lambda ()
@@ -98,7 +104,7 @@
 
 (add-hook 'go-mode-hook 'go-eldoc-setup)
 
-(setq org-babel-python-command "/Library/Frameworks/Python.framework/Versions/3.8/bin/python3")
+;;(setq org-babel-python-command "/Library/Frameworks/Python.framework/Versions/3.8/bin/python3")
 
 (setq org-confirm-babel-evaluate 'nil)
 
@@ -171,6 +177,7 @@
 (global-linum-mode t)
 
 (ivy-mode 1)
+(setq ivy-count-format "(%d/%d) ")
 (setq ivy-height 15)
 (setq ivy-use-virtual-buffers t)
 (setq enable-recursive-minibuffers t)
@@ -179,6 +186,8 @@
 (global-set-key (kbd "<f6>") 'ivy-resume)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "C-x C-r") 'counsel-recentf)
+(global-set-key (kbd "C-x b") 'counsel-switch-buffer)
 (global-set-key (kbd "<f1> f") 'counsel-describe-function)
 (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
 (global-set-key (kbd "<f1> l") 'counsel-find-library)
@@ -225,27 +234,27 @@
 
 (setq linum-format "%4d \u2502")
 
-(require 'ido-vertical-mode)
-(ido-mode 1)
-(ido-vertical-mode 1)
-(setq ido-vertical-define-keys 'C-n-and-C-p-only)
+;;(require 'ido-vertical-mode)
+;;(ido-mode 1)
+;;(ido-vertical-mode 1)
+;;(setq ido-vertical-define-keys 'C-n-and-C-p-only)
 ;; (setq ido-enable-flex-matching t)
 ;; (setq ido-everywhere t)
 ;; (setq ido-use-filename-at-point 'guess)
-(setq ido-vertical-show-count t)
+;;(setq ido-vertical-show-count t)
 
 (require 'recentf)
 (recentf-mode 1)
 ;; (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 (setq recentf-max-saved-items 100)
-(defun ido-recentf-open ()
-  "Use `ido-completing-read' to \\[find-file]] a recent file"
-  (interactive)
-  (if (find-file (ido-completing-read "Find recent files: "recentf-list))
-      (message "Opening file ...")
-    (message "Abortingn...")))
+;; (defun ido-recentf-open ()
+;;   "Use `ido-completing-read' to \\[find-file]] a recent file"
+;;   (interactive)
+;;   (if (find-file (ido-completing-read "Find recent files: "recentf-list))
+;;       (message "Opening file ...")
+;;     (message "Abortingn...")))
 
-(global-set-key "\C-x\ \C-r" 'ido-recentf-open)
+;;(global-set-key "\C-x\ \C-r" 'ido-recentf-open)
 
 (global-set-key (kbd "<f12>") 'toggle-truncate-lines)
 ;; auto-complete package
@@ -293,6 +302,20 @@
 
 (setq default-frame-alist '((font . "Menlo-18")))
 
-(load-theme 'wombat)
+(load-theme 'spacemacs-dark t)
 
 (blink-cursor-mode -1)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (exec-path-from-shell web-mode telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc ob-go markdown-mode magit json-mode js2-mode imenu-list ido-vertical-mode htmlize golint go-eldoc evil-collection eval-in-repl diminish counsel company-go company-anaconda cider auto-complete anzu ace-jump-mode))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
