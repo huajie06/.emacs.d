@@ -300,9 +300,13 @@
 
 
 ;; ==================== org mode ==========================
-(define-key global-map "\C-cc" 'org-capture)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-ca" 'org-agenda)
+(setq org-agenda-files (quote ("~/progm/notes"
+			       "~/progm/notes/archive/")))
+(setq org-archive-location "~/progm/notes/archive/archive.org::")
+(setq org-default-notes-file "~/progm/notes/archive/default_note.org")
 (setq org-directory "~/progm/notes/")
-(setq org-default-notes-file "~/progm/notes/default_note.org")
 (setq org-capture-templates
       '(
 	("n" "some note" entry (file org-default-notes-file) "* %? %i\n@%U\tFile:%F" :empty-lines 1)
@@ -321,6 +325,10 @@
 (load-theme 'spacemacs-dark t)
 
 (blink-cursor-mode -1)
+
+(beacon-mode 1)
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -329,7 +337,7 @@
  '(blink-cursor-mode nil)
  '(package-selected-packages
    (quote
-    (exec-path-from-shell web-mode telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc ob-go markdown-mode magit json-mode js2-mode imenu-list ido-vertical-mode htmlize golint evil-collection eval-in-repl diminish counsel company-go company-anaconda cider auto-complete anzu ace-jump-mode)))
+    (beacon exec-path-from-shell web-mode telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc ob-go markdown-mode magit json-mode js2-mode imenu-list ido-vertical-mode htmlize golint evil-collection eval-in-repl diminish counsel company-go company-anaconda cider auto-complete anzu ace-jump-mode)))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
