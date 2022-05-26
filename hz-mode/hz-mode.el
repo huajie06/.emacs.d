@@ -79,9 +79,9 @@
      ;; ((string-equal $fSuffix "sas")(message "SAS running..."))
      ((string-equal $fSuffix "el") (load $fname))
      ((string-equal $fSuffix "go")
-      (when (fboundp 'gofmt)
-	(gofmt)
-	(shell-command $cmd-str "*run-current-file output*" )))
+      ;; (when (fboundp 'gofmt)
+      ;; 	(gofmt)
+	(shell-command $cmd-str "*run-current-file output*" ))
      ((string-equal $fSuffix "java")
       (progn
 	(shell-command $cmd-str "*run-current-file output*" )

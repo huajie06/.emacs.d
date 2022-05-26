@@ -26,11 +26,17 @@
 
 (require 'tramp)
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+(add-to-list 'tramp-remote-path "~/go/bin")
+
+
+;; (require 'go-eldoc)
+;; (add-hook 'go-mode-hook 'go-eldoc-setup)
 
 (defun my-go-mode-hook ()
     ;; prefer goimports, if present
-    (if (executable-find "goimports")
-    (setq gofmt-command "goimports"))
+    ;; (if (executable-find "goimports")
+    ;; (setq gofmt-command "goimports"))
+    (setq gofmt-command "goimports")
     (add-hook 'before-save-hook 'gofmt-before-save)
 
     ;; esc-space to jump to definition
@@ -39,8 +45,8 @@
     ;; escp-b to jump (b)ack
     (local-set-key (kbd "M-b") 'pop-tag-mark))
 
-(add-hook 'go-mode-hook 'my-go-mode-hook 'go-eldoc-setup)
-
+(add-hook 'go-mode-hook 'my-go-mode-hook)
+;;(add-to-list 'load-path "~/.emacs.d/elpa/go-eldoc-20170305.1427")
 
 ;; lisp
 (slime-setup '(slime-fancy slime-company))
@@ -68,9 +74,9 @@
 (setq company-echo-delay 0)                          ; remove annoying blinking
 (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
 
-(add-hook 'go-mode-hook (lambda ()
-                          (set (make-local-variable 'company-backends) '(company-go))
-                          (company-mode)))
+;; (add-hook 'go-mode-hook (lambda ()
+;;                           (set (make-local-variable 'company-backends) '(company-go))
+;;                           (company-mode)))
 
 (add-hook 'html-mode-hook 'web-mode)
 (add-hook 'python-mode-hook 'anaconda-mode)
@@ -80,8 +86,8 @@
 ;; (eval-after-load "company"
 ;;  '(add-to-list 'company-backends 'company-anaconda))
 
-(eval-after-load "company"
- '(add-to-list 'company-backends '(company-anaconda :with company-capf)))
+;; (eval-after-load "company"
+;;  '(add-to-list 'company-backends '(company-anaconda :with company-capf)))
 
 (add-hook 'python-mode-hook
       (lambda ()
@@ -89,7 +95,6 @@
         (setq tab-width 4)
         (setq python-indent-offset 4)))
 
-(define-key global-map "\C-cc" 'org-capture)
 
 (require 'ob-go)
 (org-babel-do-load-languages
@@ -102,7 +107,6 @@
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
-(add-hook 'go-mode-hook 'go-eldoc-setup)
 
 ;;(setq org-babel-python-command "/Library/Frameworks/Python.framework/Versions/3.8/bin/python3")
 
@@ -112,9 +116,11 @@
       '(("home"
 	 ("Org" (or (mode . org-mode)
 		    (filename . "OrgMode")))
+	 ("htlm" (filename . "html"))
 	 ("py" (mode . python-mode))
 	 ("go" (mode . go-mode))
 	 ("md" (mode . markdown-mode))
+	 ("json" (mode . json-mode))
 	 ("lisp" (mode . lisp-mode))
 	 ("web" (or (mode . html-mode)
 		    (mode . mhtml-mode)
@@ -292,7 +298,17 @@
 (add-hook 'org-mode-hook '(lambda () (setq fill-column 80)))
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
 
-(setq org-agenda-files (list "/Users/huajiezhang/test/notes/org_mode.org"))
+
+;; ==================== org mode ==========================
+(define-key global-map "\C-cc" 'org-capture)
+(setq org-directory "~/progm/notes/")
+(setq org-default-notes-file "~/progm/notes/default_note.org")
+(setq org-capture-templates
+      '(
+	("n" "some note" entry (file org-default-notes-file) "* %? %i\n@%U\tFile:%F" :empty-lines 1)
+	("t" "todo" entry (file org-default-notes-file) "* TODO %? %i\n@%U\tFile:%F" :empty-lines 1)
+      ))
+;; ==================== org mode ==========================
 
 (setq imenu-list-position 'left)
 (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
@@ -310,9 +326,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
  '(package-selected-packages
    (quote
-    (exec-path-from-shell web-mode telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc ob-go markdown-mode magit json-mode js2-mode imenu-list ido-vertical-mode htmlize golint go-eldoc evil-collection eval-in-repl diminish counsel company-go company-anaconda cider auto-complete anzu ace-jump-mode))))
+    (exec-path-from-shell web-mode telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc ob-go markdown-mode magit json-mode js2-mode imenu-list ido-vertical-mode htmlize golint evil-collection eval-in-repl diminish counsel company-go company-anaconda cider auto-complete anzu ace-jump-mode)))
+ '(show-paren-mode t)
+ '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
