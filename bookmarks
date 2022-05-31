@@ -1,0 +1,10 @@
+;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*- 
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("org-capture-last-stored"
+ (filename . "~/Dropbox/notes/archive/default_note.org")
+ (front-context-string . "* TODO quick tes")
+ (rear-context-string . "ouban_parse.go\n\n")
+ (position . 217))
+)
