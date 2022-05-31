@@ -183,7 +183,9 @@
 (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
 
 ;; display line numbers
-(global-linum-mode t)
+;;(global-linum-mode t)
+;;(setq linum-format "%4d \u2502")
+(global-display-line-numbers-mode)
 
 (ivy-mode 1)
 (setq ivy-count-format "(%d/%d) ")
@@ -241,7 +243,6 @@
           (evil   . (telephone-line-airline-position-segment))))
 (telephone-line-mode 1)
 
-(setq linum-format "%4d \u2502")
 
 ;;(require 'ido-vertical-mode)
 ;;(ido-mode 1)
@@ -304,6 +305,9 @@
 
 
 ;; ==================== org mode ==========================
+(require 'org-superstar)
+(add-hook 'org-mode-hook (lambda () (org-superstar-mode 1)))
+
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-ca" 'org-agenda)
 (setq org-agenda-files (quote ("~/Dropbox/notes"
@@ -313,8 +317,8 @@
 (setq org-directory "~/Dropbox/notes/")
 (setq org-capture-templates
       '(
-	("n" "some note" entry (file org-default-notes-file) "* %? %i\n%U\tFile:%F" :empty-lines 1)
-	("t" "todo" entry (file org-default-notes-file) "* TODO %? %i\n%U\tFile:%F" :empty-lines 1)
+	("n" "Note" entry (file org-default-notes-file) "* %? %i\n%U\tFile:%F" :empty-lines 1)
+	("t" "TODO" entry (file org-default-notes-file) "* TODO %? %i\n%U\tFile:%F" :empty-lines 1)
       ))
 ;; ==================== org mode ==========================
 
@@ -326,7 +330,8 @@
 
 (setq default-frame-alist '((font . "Menlo-18")))
 
-(load-theme 'spacemacs-dark t)
+;;(load-theme 'spacemacs-dark t)
+(set-background-color "#FFFDE9")
 
 (blink-cursor-mode -1)
 
@@ -340,7 +345,7 @@
  '(blink-cursor-mode nil)
  '(package-selected-packages
    (quote
-    (undo-tree beacon exec-path-from-shell web-mode telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc ob-go markdown-mode magit json-mode js2-mode imenu-list ido-vertical-mode htmlize golint evil-collection eval-in-repl diminish counsel company-go company-anaconda cider auto-complete anzu ace-jump-mode)))
+    (org-superstar undo-tree beacon exec-path-from-shell web-mode telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc ob-go markdown-mode magit json-mode js2-mode imenu-list ido-vertical-mode htmlize golint evil-collection eval-in-repl diminish counsel company-go company-anaconda cider auto-complete anzu ace-jump-mode)))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
