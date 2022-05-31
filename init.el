@@ -178,6 +178,9 @@
 ;; (evil-collection-init)
 
 (evil-mode 1)
+(evil-set-undo-system 'undo-tree)
+(global-undo-tree-mode)
+(setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
 
 ;; display line numbers
 (global-linum-mode t)
@@ -218,7 +221,7 @@
 (add-hook 'find-file-hook #'my/shell-set-hook)
 
 (projectile-mode +1)
-(define-key projectile-mode-map (kbd "M-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 (setq projectile-completion-system 'ivy)
 
 
@@ -283,6 +286,7 @@
 (global-set-key "\C-c\ \C-s" 'sr-speedbar-toggle)
 
 (define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
+(define-key evil-insert-state-map (kbd "<C-return>") 'evil-open-below)
 
 (global-anzu-mode +1)
 
@@ -302,15 +306,15 @@
 ;; ==================== org mode ==========================
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-ca" 'org-agenda)
-(setq org-agenda-files (quote ("~/progm/notes"
-			       "~/progm/notes/archive/")))
-(setq org-archive-location "~/progm/notes/archive/archive.org::")
-(setq org-default-notes-file "~/progm/notes/archive/default_note.org")
-(setq org-directory "~/progm/notes/")
+(setq org-agenda-files (quote ("~/Dropbox/notes"
+			       "~/Dropbox/notes/archive/")))
+(setq org-archive-location "~/Dropbox/notes/archive/archive.org::")
+(setq org-default-notes-file "~/Dropbox/notes/archive/default_note.org")
+(setq org-directory "~/Dropbox/notes/")
 (setq org-capture-templates
       '(
-	("n" "some note" entry (file org-default-notes-file) "* %? %i\n@%U\tFile:%F" :empty-lines 1)
-	("t" "todo" entry (file org-default-notes-file) "* TODO %? %i\n@%U\tFile:%F" :empty-lines 1)
+	("n" "some note" entry (file org-default-notes-file) "* %? %i\n%U\tFile:%F" :empty-lines 1)
+	("t" "todo" entry (file org-default-notes-file) "* TODO %? %i\n%U\tFile:%F" :empty-lines 1)
       ))
 ;; ==================== org mode ==========================
 
@@ -328,7 +332,6 @@
 
 (beacon-mode 1)
 
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -337,7 +340,7 @@
  '(blink-cursor-mode nil)
  '(package-selected-packages
    (quote
-    (beacon exec-path-from-shell web-mode telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc ob-go markdown-mode magit json-mode js2-mode imenu-list ido-vertical-mode htmlize golint evil-collection eval-in-repl diminish counsel company-go company-anaconda cider auto-complete anzu ace-jump-mode)))
+    (undo-tree beacon exec-path-from-shell web-mode telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc ob-go markdown-mode magit json-mode js2-mode imenu-list ido-vertical-mode htmlize golint evil-collection eval-in-repl diminish counsel company-go company-anaconda cider auto-complete anzu ace-jump-mode)))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
