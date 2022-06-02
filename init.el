@@ -21,8 +21,8 @@
 
 
 
-;; (when (memq window-system '(mac ns x))
-;;   (exec-path-from-shell-initialize))
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
 (require 'tramp)
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
@@ -46,7 +46,17 @@
     (local-set-key (kbd "M-b") 'pop-tag-mark))
 
 (add-hook 'go-mode-hook 'my-go-mode-hook)
-;;(add-to-list 'load-path "~/.emacs.d/elpa/go-eldoc-20170305.1427")
+
+;;=================lsp-mode======================
+(require 'lsp-mode)
+(add-hook 'go-mode-hook #'lsp-deferred)
+;; (lsp-register-client
+;;  (make-lsp-client :new-connection (lsp-tramp-connection "go")
+;;               :major-modes '(go-mode)
+;;               :remote? t
+;;               :server-id 'go-remote))
+
+;;=================lsp-mode======================
 
 ;; lisp
 (slime-setup '(slime-fancy slime-company))
@@ -78,9 +88,9 @@
 ;;                           (set (make-local-variable 'company-backends) '(company-go))
 ;;                           (company-mode)))
 
-(add-hook 'html-mode-hook 'web-mode)
-(add-hook 'python-mode-hook 'anaconda-mode)
-(add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+;; (add-hook 'html-mode-hook 'web-mode)
+;; (add-hook 'python-mode-hook 'anaconda-mode)
+;; (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
 
 (require 'rx)
 ;; (eval-after-load "company"
@@ -180,6 +190,7 @@
 (evil-mode 1)
 (evil-set-undo-system 'undo-tree)
 (global-undo-tree-mode)
+(setq undo-tree-auto-save-history t)
 (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
 
 ;; display line numbers
@@ -187,28 +198,45 @@
 ;;(setq linum-format "%4d \u2502")
 (global-display-line-numbers-mode)
 
+
+
+
 (ivy-mode 1)
 (setq ivy-count-format "(%d/%d) ")
 (setq ivy-height 15)
 (setq ivy-use-virtual-buffers t)
 (setq enable-recursive-minibuffers t)
+
+;; (global-set-key (kbd "M-x") 'counsel-M-x)
+;; (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+;; (global-set-key (kbd "C-x C-r") 'counsel-recentf)
+;; (global-set-key (kbd "C-x b") 'counsel-switch-buffer)
+
+(require 'helm)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x C-f") 'helm-find-file)
+(global-set-key (kbd "C-x C-r") 'helm-recentf)
+(global-set-key (kbd "C-x b") 'helm-buffers-list)
+(global-set-key (kbd "C-x r l") 'helm-bookmark)
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+(setq helm-recentf-fuzzy-match t)
+(setq helm-buffers-fuzzy-matching t)
+
+
 (global-set-key "\C-s" 'swiper)
 (global-set-key (kbd "C-c C-r") 'ivy-resume)
-(global-set-key (kbd "<f6>") 'ivy-resume)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "C-x C-r") 'counsel-recentf)
-(global-set-key (kbd "C-x b") 'counsel-switch-buffer)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> l") 'counsel-find-library)
-(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-(global-set-key (kbd "C-c g") 'counsel-git)
-(global-set-key (kbd "C-c j") 'counsel-git-grep)
-(global-set-key (kbd "C-c k") 'counsel-ag)
-(global-set-key (kbd "C-x l") 'counsel-locate)
-(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+;; (global-set-key (kbd "<f6>") 'ivy-resume)
+;; (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+;; (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+;; (global-set-key (kbd "<f1> l") 'counsel-find-library)
+;; (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+;; (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+;; (global-set-key (kbd "C-c g") 'counsel-git)
+;; (global-set-key (kbd "C-c j") 'counsel-git-grep)
+;; (global-set-key (kbd "C-c k") 'counsel-ag)
+;; (global-set-key (kbd "C-x l") 'counsel-locate)
+;; (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
 (global-set-key "\C-x\ \C-b" 'ibuffer)
@@ -286,7 +314,13 @@
 (setq sr-speedbar-right-side nil)
 (global-set-key "\C-c\ \C-s" 'sr-speedbar-toggle)
 
-(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
+;;(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
+(define-key evil-normal-state-map (kbd "SPC") 'avy-goto-char-timer)
+(setq avy-background t)
+(setq avy-orders-alist
+      '((avy-goto-char . avy-order-closest)
+        (avy-goto-word-0 . avy-order-closest)))
+
 (define-key evil-insert-state-map (kbd "<C-return>") 'evil-open-below)
 
 (global-anzu-mode +1)
@@ -313,13 +347,22 @@
 (setq org-agenda-files (quote ("~/Dropbox/notes"
 			       "~/Dropbox/notes/archive/")))
 (setq org-archive-location "~/Dropbox/notes/archive/archive.org::")
-(setq org-default-notes-file "~/Dropbox/notes/archive/default_note.org")
+(setq org-default-notes-file "~/Dropbox/notes/org_capture.org")
 (setq org-directory "~/Dropbox/notes/")
 (setq org-capture-templates
       '(
 	("n" "Note" entry (file org-default-notes-file) "* %? %i\n%U\tFile:%F" :empty-lines 1)
 	("t" "TODO" entry (file org-default-notes-file) "* TODO %? %i\n%U\tFile:%F" :empty-lines 1)
       ))
+
+
+
+(setq org-journal-file-format "Journal%Y.org")
+(setq org-journal-date-format "%A, %d %B %Y")
+(setq org-journal-dir "~/Dropbox/notes/")
+(setq org-journal-file-type 'yearly)
+(require 'org-journal)
+
 ;; ==================== org mode ==========================
 
 (setq imenu-list-position 'left)
@@ -345,7 +388,7 @@
  '(blink-cursor-mode nil)
  '(package-selected-packages
    (quote
-    (org-superstar undo-tree beacon exec-path-from-shell web-mode telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc ob-go markdown-mode magit json-mode js2-mode imenu-list ido-vertical-mode htmlize golint evil-collection eval-in-repl diminish counsel company-go company-anaconda cider auto-complete anzu ace-jump-mode)))
+    (org-journal helm yasnippet lsp-mode go-eldoc org-superstar undo-tree beacon exec-path-from-shell web-mode telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc ob-go markdown-mode magit json-mode js2-mode imenu-list ido-vertical-mode htmlize golint evil-collection eval-in-repl diminish counsel company-go company-anaconda cider auto-complete anzu ace-jump-mode)))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
