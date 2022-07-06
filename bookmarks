@@ -3,8 +3,8 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored"
- (filename . "~/Dropbox/notes/archive/default_note.org")
- (front-context-string . "* TODO quick tes")
- (rear-context-string . "ouban_parse.go\n\n")
- (position . 217))
+ (filename . "~/Dropbox/notes/org_capture.org")
+ (front-context-string . "* ledger \nhttps:")
+ (rear-context-string . "022-06-13 Mon>\n\n")
+ (position . 433))
 )

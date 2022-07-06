@@ -56,20 +56,6 @@
 ;;               :remote? t
 ;;               :server-id 'go-remote))
 
-;;=================lsp-mode======================
-
-;; lisp
-(slime-setup '(slime-fancy slime-company))
-
-;; (setq slime-lisp-implementations
-;;       '((sbcl ("sbcl" "--core" "sbcl.core-for-slime"))))
-
-(setq inferior-lisp-program "/usr/local/bin/sbcl")
-(setq slime-contribs '(slime-fancy))
-(require 'eval-in-repl-slime)
-(add-hook 'lisp-mode-hook
-      '(lambda ()
-         (local-set-key (kbd "<C-return>") 'eir-eval-in-slime)))
 
 (defun align-equals (begin end)
     (interactive "r")
@@ -111,7 +97,7 @@
  'org-babel-load-languages
  '((go . t)))
 
-(show-paren-mode 1)
+(show-paren-mode t)
 (electric-pair-mode 1)
 
 (require 'rainbow-delimiters)
@@ -177,15 +163,18 @@
 
 ;; don't show the tool bar
 
-(menu-bar-mode 1)
+(menu-bar-mode t)
 
 ;; don't show tool bar
-(tool-bar-mode -1)
+(tool-bar-mode -1) 
 
 ;; (with-eval-after-load 'ilist (evil-collection-imenu-list-setup))
 
 ;; (setq evil-want-keybinding nil)
 ;; (evil-collection-init)
+
+
+(setq scroll-conservatively 101)
 
 (evil-mode 1)
 (evil-set-undo-system 'undo-tree)
@@ -196,8 +185,20 @@
 ;; display line numbers
 ;;(global-linum-mode t)
 ;;(setq linum-format "%4d \u2502")
-(global-display-line-numbers-mode)
+(global-display-line-numbers-mode t)
 
+
+(require 'recentf)
+(recentf-mode 1)
+;; (global-set-key "\C-x\ \C-r" 'recentf-open-files)
+(setq recentf-max-saved-items 150)
+
+;; (defun ido-recentf-open ()
+;;   "Use `ido-completing-read' to \\[find-file]] a recent file"
+;;   (interactive)
+;;   (if (find-file (ido-completing-read "Find recent files: "recentf-list))
+;;       (message "Opening file ...")
+;;     (message "Abortingn...")))
 
 
 
@@ -207,16 +208,19 @@
 (setq ivy-use-virtual-buffers t)
 (setq enable-recursive-minibuffers t)
 
-;; (global-set-key (kbd "M-x") 'counsel-M-x)
-;; (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-;; (global-set-key (kbd "C-x C-r") 'counsel-recentf)
-;; (global-set-key (kbd "C-x b") 'counsel-switch-buffer)
+(global-set-key (kbd "C-x b") 'ivy-switch-buffer)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+;;(global-set-key (kbd "C-x C-r") 'counsel-buffer-or-recentf)
+;;(require 'prescient)
+
+(ivy-prescient-mode +1)
 
 (require 'helm)
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x C-f") 'helm-find-file)
+;;(global-set-key (kbd "M-x") 'helm-M-x)
+;;(global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "C-x C-r") 'helm-recentf)
-(global-set-key (kbd "C-x b") 'helm-buffers-list)
+;;(global-set-key (kbd "C-x b") 'helm-buffers-list)
 (global-set-key (kbd "C-x r l") 'helm-bookmark)
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
 (setq helm-recentf-fuzzy-match t)
@@ -281,17 +285,6 @@
 ;; (setq ido-use-filename-at-point 'guess)
 ;;(setq ido-vertical-show-count t)
 
-(require 'recentf)
-(recentf-mode 1)
-;; (global-set-key "\C-x\ \C-r" 'recentf-open-files)
-(setq recentf-max-saved-items 100)
-;; (defun ido-recentf-open ()
-;;   "Use `ido-completing-read' to \\[find-file]] a recent file"
-;;   (interactive)
-;;   (if (find-file (ido-completing-read "Find recent files: "recentf-list))
-;;       (message "Opening file ...")
-;;     (message "Abortingn...")))
-
 ;;(global-set-key "\C-x\ \C-r" 'ido-recentf-open)
 
 (global-set-key (kbd "<f12>") 'toggle-truncate-lines)
@@ -315,7 +308,8 @@
 (global-set-key "\C-c\ \C-s" 'sr-speedbar-toggle)
 
 ;;(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
-(define-key evil-normal-state-map (kbd "SPC") 'avy-goto-char-timer)
+(define-key evil-normal-state-map (kbd "SPC") 'avy-goto-char-2)
+;;(define-key evil-normal-state-map (kbd "SPC") 'avy-goto-word-0)
 (setq avy-background t)
 (setq avy-orders-alist
       '((avy-goto-char . avy-order-closest)
@@ -327,12 +321,18 @@
 
 (require 'diminish)
 (diminish 'company-mode)
-(diminish 'hz-mode)
+(diminish 'hz-mode "hz")
 (diminish 'undo-tree-mode)
 (diminish 'eldoc-mode)
 (diminish 'ivy-mode)
 (diminish 'projectile-mode)
 (diminish 'anzu-mode)
+(diminish 'auto-revert-mode)
+(diminish 'slime-mode)
+(diminish 'eldoc-mode)
+(diminish 'aggressive-indent-mode)
+(diminish 'auto-revert-mode)
+
 
 (add-hook 'org-mode-hook '(lambda () (setq fill-column 80)))
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
@@ -352,16 +352,15 @@
 (setq org-capture-templates
       '(
 	("n" "Note" entry (file org-default-notes-file) "* %? %i\n%U\tFile:%F" :empty-lines 1)
-	("t" "TODO" entry (file org-default-notes-file) "* TODO %? %i\n%U\tFile:%F" :empty-lines 1)
-      ))
+	("t" "TODO" entry (file org-default-notes-file) "* TODO %? %i\n%U\tFile:%F" :empty-lines 1)))
 
 
 
-(setq org-journal-file-format "Journal%Y.org")
-(setq org-journal-date-format "%A, %d %B %Y")
-(setq org-journal-dir "~/Dropbox/notes/")
-(setq org-journal-file-type 'yearly)
-(require 'org-journal)
+;; (setq org-journal-file-format "Journal%Y.org")
+;; (setq org-journal-date-format "%A, %m/%d/%Y")
+;; (setq org-journal-dir "~/Dropbox/notes/")
+;; (setq org-journal-file-type 'yearly)
+;; (require 'org-journal)
 
 ;; ==================== org mode ==========================
 
@@ -371,14 +370,49 @@
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
 
-(setq default-frame-alist '((font . "Menlo-18")))
 
 ;;(load-theme 'spacemacs-dark t)
 (set-background-color "#FFFDE9")
 
 (blink-cursor-mode -1)
+(global-hl-line-mode)
 
-(beacon-mode 1)
+(setq inhibit-splash-screen t)
+;;(beacon-mode 1)
+
+
+
+;;=================lsp-mode======================
+
+;; lisp
+(slime-setup '(slime-fancy slime-company))
+
+;; (setq slime-lisp-implementations
+;;       '((sbcl ("sbcl" "--core" "sbcl.core-for-slime"))))
+
+(setq inferior-lisp-program "/usr/local/bin/sbcl")
+(setq slime-contribs '(slime-fancy))
+
+(add-hook 'lisp-mode-hook #'aggressive-indent-mode)
+(require 'eval-in-repl-slime)
+(add-hook 'lisp-mode-hook
+      '(lambda ()
+         (local-set-key (kbd "<C-return>") 'eir-eval-in-slime)))
+
+(with-eval-after-load 'eval-in-repl-slime
+  (define-key evil-insert-state-map (kbd "<C-return>") 'eir-eval-in-slime))
+
+;; (frame-char-width)
+;; (frame-char-height)
+;; (window-total-height)
+;; (window-total-width)
+;; (window-body-height)
+;; (window-body-width)
+
+
+(setq default-frame-alist '((width . 160)
+			    (height . 55)
+			    (font . "Menlo-18")))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -386,11 +420,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(blink-cursor-mode nil)
+ '(global-display-line-numbers-mode t)
  '(package-selected-packages
    (quote
-    (org-journal helm yasnippet lsp-mode go-eldoc org-superstar undo-tree beacon exec-path-from-shell web-mode telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc ob-go markdown-mode magit json-mode js2-mode imenu-list ido-vertical-mode htmlize golint evil-collection eval-in-repl diminish counsel company-go company-anaconda cider auto-complete anzu ace-jump-mode)))
- '(show-paren-mode t)
- '(tool-bar-mode nil))
+    (dracula-theme yasnippet web-mode undo-tree telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc org-superstar org-journal ob-go magit lsp-mode json-mode js2-mode ivy-prescient imenu-list ido-vertical-mode htmlize helm golint go-eldoc exec-path-from-shell evil-collection eval-in-repl diminish counsel company-go company-anaconda cider beacon auto-complete anzu aggressive-indent ace-jump-mode)))
+ '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
