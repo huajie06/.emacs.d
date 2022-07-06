@@ -127,6 +127,9 @@
       (shell-command cmdstr "*current process status*")
       )))
 
+(defun align-equals (begin end)
+  (interactive "r")
+  (align-regexp begin end "\\(\\s-*\\)=" 1 1))
 
 (defvar hz-mode-map
   (let ((map (make-sparse-keymap)))
@@ -135,8 +138,10 @@
     (define-key map (kbd "<f3>") 'run-current-file)
     (define-key map (kbd "<f8>") 'execute-current-file)
     (define-key map (kbd "<f9>") 'current-file-status-check)
+    (define-key map (kbd "M-=") 'align-equals)
+    (global-unset-key (kbd "C-h C-h"))
     map)
-    "key map for `hz-mode'.
+  "key map for `hz-mode'.
 add some more stuff here.")
 
 
