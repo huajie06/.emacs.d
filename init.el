@@ -1,8 +1,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;                                                       
-;;;;;         use package                                              
-;;;;;                                                       
+;;;;;
+;;;;;         use package
+;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -31,8 +31,8 @@
     (local-set-key (kbd "M-SPC") 'godef-jump)
     (local-set-key (kbd "C-c C-g") 'golint)
     (local-set-key (kbd "M-b") 'pop-tag-mark))
-
   :config
+  (flymake-mode -1)
   (add-hook 'go-mode-hook 'my-go-mode-hook))
 
 (use-package eldoc
@@ -47,24 +47,31 @@
 (use-package company
   :diminish
   :init
-  (setq company-format-margin-function 'company-text-icons-margin
-	company-text-icons-add-background t
+  (setq company-text-icons-add-background t
 	company-tooltip-idle-delay 10
 	company-tooltip-minimum 4
 	company-tooltip-minimum-width 40
 	company-idle-delay .3
-	company-echo-delay 0)
+	company-show-numbers t
+	company-echo-delay 0
+	company-format-margin-function #'company-text-icons-margin)
   :config
   (global-company-mode)
-
   (define-key company-active-map (kbd "C-n") (lambda () (interactive) (company-complete-common-or-cycle 1)))
   (define-key company-active-map (kbd "C-p") (lambda () (interactive) (company-complete-common-or-cycle -1))))
 
+(use-package yasnippet
+  :diminish
+  :config
+  (yas-global-mode)
+  (define-key yas-minor-mode-map [(tab)]        nil)
+  (define-key yas-minor-mode-map (kbd "TAB")    nil)
+  (define-key yas-minor-mode-map (kbd "<tab>")  nil))
 
 (use-package aggressive-indent
   :diminish
   :config
-  (add-hook 'prog-mode-hook #'aggressive-indent-mode))
+  (add-hook 'lisp-mode-hook #'aggressive-indent-mode))
 
 
 (use-package ob-go
@@ -85,7 +92,7 @@
   (evil-mode 1)
   (evil-set-undo-system 'undo-tree)
   (define-key evil-normal-state-map (kbd "SPC") 'avy-goto-char-2))
-  
+
 
 (use-package undo-tree
   :diminish
@@ -103,6 +110,8 @@
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
   :config
+  (global-set-key (kbd "C-h f") 'counsel-describe-function)
+  (global-set-key (kbd "C-h v") 'counsel-describe-variable)
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
   (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
   (global-set-key (kbd "M-x") 'counsel-M-x)
@@ -171,6 +180,7 @@
 
 (use-package diminish
   :config
+  (diminish 'yas-minor-mode)
   (diminish 'hz-mode "hz"))
 
 
@@ -179,8 +189,7 @@
   (add-hook 'lisp-mode-hook
 	    '(lambda ()
 	       (local-set-key (kbd "<C-return>") 'eir-eval-in-slime)))
-  (define-key evil-insert-state-map (kbd "<C-return>") 'eir-eval-in-slime)
-  )
+  (define-key evil-insert-state-map (kbd "<C-return>") 'eir-eval-in-slime))
 
 
 (use-package slime
@@ -189,9 +198,9 @@
   (setq slime-contribs '(slime-fancy)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;                                                       
-;;;;;         end use package                                              
-;;;;;                                                       
+;;;;;
+;;;;;         end use package
+;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package recentf
@@ -235,8 +244,9 @@
   (show-paren-mode t)
   (electric-pair-mode 1)
   (menu-bar-mode t)
-  (tool-bar-mode -1) 
+  (tool-bar-mode -1)
   (add-hook 'org-mode-hook 'turn-on-auto-fill)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (global-display-line-numbers-mode t)
   (global-auto-revert-mode 1))
 
@@ -270,7 +280,7 @@
 	  '(lambda ()
 	     (ibuffer-switch-to-saved-filter-groups "home")))
 
-
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 ;; ==================== org mode ==========================
 
 (org-babel-do-load-languages
@@ -292,14 +302,13 @@
       '(("n" "Note" entry (file org-default-notes-file) "* %? %i\n%U\tFile:%F" :empty-lines 1)
 	("t" "TODO" entry (file org-default-notes-file) "* TODO %? %i\n%U\tFile:%F" :empty-lines 1)))
 
-
 ;; ==================== org mode ==========================
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;                                                       
-;;;;;         use funcs                                              
-;;;;;                                                       
+;;;;;
+;;;;;         use funcs
+;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-to-list 'load-path "~/.emacs.d/hz-mode")
@@ -313,5 +322,31 @@
 
 (add-hook 'find-file-hook #'my/shell-set-hook)
 
+;; (defun my-display-something ()
+;;   (when (file-remote-p default-directory)
+;;     (setq default)))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
+ '(global-display-line-numbers-mode t)
+ '(show-paren-mode t)
+ '(tool-bar-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 
 
+
+(defun increment-number-at-point ()
+    (interactive)
+    (skip-chars-backward "0-9")
+    (or (looking-at "[0-9]+")
+	(error "No number at point"))
+    (replace-match (number-to-string (- (string-to-number (match-string 0)) 2))))
+(global-set-key (kbd "C-c +") 'increment-number-at-point)
