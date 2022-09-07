@@ -4,7 +4,7 @@
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("org-capture-last-stored"
  (filename . "~/Dropbox/notes/org_capture.org")
- (front-context-string . "* ledger \nhttps:")
- (rear-context-string . "022-06-13 Mon>\n\n")
- (position . 433))
+ (front-context-string . "* TODO compare m")
+ (rear-context-string . "macs.d/init.el\n\n")
+ (position . 1593))
 )

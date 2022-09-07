@@ -10,3 +10,5 @@ anaconda*
 async*
 ido*
 transient*
+#*#
+.DS_Store
