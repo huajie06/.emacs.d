@@ -23,6 +23,45 @@
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
+;; (use-package org-download
+;;   :after org
+;;   :defer nil
+;;   :custom
+;;   (org-download-method 'directory)
+;;   (org-download-image-dir "images")
+;;   (org-download-heading-lvl nil)
+;;   (org-download-timestamp "%Y%m%d-%H%M%S_")
+;;   (org-image-actual-width 300)
+;;   (org-download-screenshot-method "screencapture %s"))
+
+(defun my-org-screenshot ()
+  "Take a screenshot into a time stamped unique-named file in the
+same directory as the org-buffer and insert a link to this file."
+  (interactive)
+  ;;(org-display-inline-images)
+  (setq filename
+        (concat
+         (make-temp-name
+          (concat (file-name-nondirectory (buffer-file-name))
+                  "_imgs/"
+                  (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+  (unless (file-exists-p (file-name-directory filename))
+    (make-directory (file-name-directory filename)))
+  ; take screenshot
+  (if (eq system-type 'darwin)
+      (call-process "/usr/sbin/screencapture" nil nil nil "-i" filename)
+      ;;(print (concat "screencapture" " -i " filename))
+      ;;(shell-command (concat "screencapture" " -i " filename))
+    )
+  (if (eq system-type 'gnu/linux)
+      (call-process "import" nil nil nil filename))
+  ; insert into file if correctly taken
+  (if (file-exists-p filename)
+      (insert (concat "[[file:" filename "]]")))
+  (org-display-inline-images)
+  )
+
+
 (use-package go-mode
   :init
   (defun my-go-mode-hook ()
@@ -114,7 +153,7 @@
   (global-set-key (kbd "C-h v") 'counsel-describe-variable)
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
   (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
-  (global-set-key (kbd "M-x") 'counsel-M-x)
+  ;;(global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file))
 
 (use-package swiper
@@ -134,6 +173,7 @@
   (setq helm-recentf-fuzzy-match t)
   (setq helm-buffers-fuzzy-matching t)
   :config
+  (global-set-key (kbd "M-x") 'helm-M-x)
   (global-set-key (kbd "C-x C-r") 'helm-recentf)
   (global-set-key (kbd "C-x r l") 'helm-bookmark)
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action))
@@ -180,6 +220,7 @@
 
 (use-package diminish
   :config
+  (diminish 'auto-fill-function)
   (diminish 'yas-minor-mode)
   (diminish 'hz-mode "hz"))
 
@@ -234,9 +275,11 @@
   (setq scroll-conservatively 101)
   (setq org-confirm-babel-evaluate 'nil)
   (setq fill-column 80)
-  (setq default-frame-alist '((width . 160)
-			      (height . 55)
+  (setq default-frame-alist '((width . 80)
+			      (height . 35)
 			      (font . "Menlo-18")))
+
+  (setq org-image-actual-width nil)
   :config
 
   (blink-cursor-mode -1)
@@ -291,6 +334,11 @@
    (shell . t)
    (lisp . t)))
 
+(setq org-todo-keyword-faces
+      '(
+	("FAIL" . "magenta")))
+
+
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-ca" 'org-agenda)
 (setq org-agenda-files (quote ("~/Dropbox/notes"
@@ -332,6 +380,9 @@
  ;; If there is more than one, they won't work right.
  '(blink-cursor-mode nil)
  '(global-display-line-numbers-mode t)
+ '(package-selected-packages
+   (quote
+    (org-download yasnippet web-mode use-package undo-tree telephone-line sr-speedbar spacemacs-theme slime-company rainbow-delimiters projectile powerline ox-pandoc org-superstar org-journal ob-go magit lsp-mode json-mode js2-mode ivy-prescient imenu-list ido-vertical-mode htmlize helm golint go-eldoc exec-path-from-shell evil-collection eval-in-repl dracula-theme diminish counsel company-go company-anaconda cider beacon auto-complete anzu aggressive-indent ace-jump-mode)))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces
